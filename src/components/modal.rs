@@ -1,12 +1,10 @@
-use chrono::Local;
 use yew::prelude::*;
 
 use crate::manager::{GameMode, Theme, WordList};
 use crate::Msg;
 
-const FORMS_LINK_TEMPLATE_ADD: &str = "https://docs.google.com/forms/d/e/1FAIpQLSfH8gs4sq-Ynn8iGOvlc99J_zOG2rJEC4m8V0kCgF_en3RHFQ/viewform?usp=pp_url&entry.461337706=Lis%C3%A4yst%C3%A4&entry.560255602=";
-const CHANGELOG_URL: &str = "https://github.com/Cadiac/sanuli/blob/master/CHANGELOG.md";
-const VERSION: &str = "v1.14";
+const CHANGELOG_URL: &str = "https://github.com/mirokuru/maiuli/blob/master/CHANGELOG.md";
+const VERSION: &str = "v1.0";
 
 macro_rules! onmousedown {
     ( $cb:ident, $msg:expr ) => {{
@@ -32,7 +30,7 @@ pub fn help_modal(props: &HelpModalProps) -> Html {
     html! {
         <div class="modal">
             <span onmousedown={toggle_help} class="modal-close">{"✖"}</span>
-            <p>{"Arvaa kätketty "}<i>{"sanuli"}</i>{" kuudella yrityksellä."}</p>
+            <p>{"Arvaa kätketty sana kuudella yrityksellä."}</p>
             <p>{"Jokaisen yrityksen jälkeen arvatut kirjaimet vaihtavat väriään."}</p>
 
             <div class="row-5 example">
@@ -61,7 +59,7 @@ pub fn help_modal(props: &HelpModalProps) -> Html {
                         if props.theme == Theme::Colorblind {
                             <span class="correct">{"Oranssi"}</span>
                         } else {
-                            <span class="correct">{"Vihreä"}</span>
+                            <span class="correct">{"Pinkki"}</span>
                         }
                     }
                 }
@@ -70,33 +68,28 @@ pub fn help_modal(props: &HelpModalProps) -> Html {
             <p><span class="absent">{"Harmaa"}</span>{": kirjain ei löydy sanasta."}</p>
 
             <p>
-                {"Arvattaviin sanoihin käytetyn sanulistan vaikeusasteen voi valita asetuksista. Sanulistojen pohjana on käytetty
+                {"Arvattaviin sanoihin käytetyn sanalistan vaikeusasteen voi valita asetuksista. Sanalistojen pohjana on käytetty
                 Kotimaisten kielten keskuksen (Kotus) julkaiseman "}
                 <a class="link" href="https://creativecommons.org/licenses/by/3.0/deed.fi" target="_blank">{"\"CC Nimeä 3.0 Muokkaamaton\""}</a>
                 {"-lisensoidun nykysuomen sanalistan sanoja."}
             </p>
 
-            <p><b>{"Tavallinen"}</b>{" lista sisältää täydestä listasta poimitut yleisimmät sanat ilman harvinaisempia laina- ja murresanoja tai muita erikoisuuksia."}</p>
-            <p><b>{"Helppo"}</b>{" lista on tavallisesta vielä hieman helpotettu versio, jossa jäljellä ovat vain yleiset arkikielen sanat ilman vanhahtavia sanoja,
-                puhekieltä tai rumia sanuleja. Näin lista sopii kaikenikäisille. \"Helppo\" kuusikirjaimisten sanulien lista on kuitenkin vielä kesken."}</p>
-            <p><b>{"Vaikea"}</b>{" lista on täysi lista pelin hyväksymiä sanoja. Tälle listalle on myös lisätty jonkin verran käyttäjien uusia ehdotuksia,
-                puhekielisyyksiä, murresanoja sekä muita erikoisuuksia, eikä poistoja ole tehty kuin vain jos sanulit eivät selvästi ole oikeita sanoja."}</p>
+            <p><b>{"Tavallinen"}</b>{" lista sisältää perusmuotoisia sanoja, jotka saattavat liittyä Vasemmistoliiton ehdokkaaseen Mai Kivelään jotenkin 😊"}</p>
+            <p><b>{"Helppo"}</b>{" lista on tavallisesta hieman helpotettu versio, jossa jäljellä ovat hieman yleisemmät sanat."}</p>
             <p>
-                {"Sanulit ovat yleensä perusmuodossa, mutta eivät välttämättä täysin pelkkää kirjakieltä. Yhdyssanojakin on seassa."}
+                {"Sanat ovat yleensä perusmuodossa, mutta eivät välttämättä täysin pelkkää kirjakieltä. Yhdyssanojakin on seassa."}
             </p>
             <p>
-                {"Päivän sanulit tulevat omalta listaltaan, joka on jotain tavallisen ja vaikean listan väliltä. Sanuli on aina sama kaikille pelaajille tiettynä päivänä."}
+                {"Maiuliketjussa jos arvaat maiulin, on se suoraan ensimmäinen arvaus seuraavaan peliin. Näin joudut sopeutumaan vaihtuviin alkuarvauksiin, ja peli on hieman vaikeampi."}
             </p>
             <p>
-                {"Sanuliketjussa jos arvaat sanulin, on se suoraan ensimmäinen arvaus seuraavaan peliin. Näin joudut sopeutumaan vaihtuviin alkuarvauksiin, ja peli on hieman vaikeampi."}
+                {"Maiuli pohjautuu suoraan Jaakko Husson julkaisemaan MIT-lisensoituun "}
+                <a class="link" href="https://github.com/Cadiac/sanuli" target="_blank">{"Sanuli"}</a>
+                {"-peliin."}
             </p>
             <p>
-                {"Nelulissa ratkaiset samalla kertaa neljää eri sanulia samoilla arvauksilla. Tavoite on saada kaikki neljä sanulia ratkaistua yhdeksällä arvauksella."}
-            </p>
-            <p>
-                {"Sanulistoja muokkailen aina välillä käyttäjien ehdotusten perusteella, ja voit jättää omat ehdotuksesi sanuleihin "}
-                <a class="link" href={FORMS_LINK_TEMPLATE_ADD}>{"täällä"}</a>
-                {". Kiitos kaikille ehdotuksia jättäneille ja sanulistojen kasaamisessa auttaneille henkilöille!"}
+                {"Muokkaukset on tehnyt Miro Kuru, ja "}<a class="link" href="https://github.com/mirokuru/maiuli" target="_blank">{"lähdekoodi"}</a>
+                {" on saatavilla. "}
             </p>
         </div>
     }
@@ -119,25 +112,18 @@ pub struct MenuModalProps {
 #[function_component(MenuModal)]
 pub fn menu_modal(props: &MenuModalProps) -> Html {
     let callback = props.callback.clone();
-    let today = Local::now().naive_local().date();
     let toggle_menu = onmousedown!(callback, Msg::ToggleMenu);
 
+    let change_word_length_4 = onmousedown!(callback, Msg::ChangeWordLength(4));
     let change_word_length_5 = onmousedown!(callback, Msg::ChangeWordLength(5));
     let change_word_length_6 = onmousedown!(callback, Msg::ChangeWordLength(6));
+    let change_word_length_7 = onmousedown!(callback, Msg::ChangeWordLength(7));
 
     let change_game_mode_classic = onmousedown!(callback, Msg::ChangeGameMode(GameMode::Classic));
     let change_game_mode_relay = onmousedown!(callback, Msg::ChangeGameMode(GameMode::Relay));
-    let change_game_mode_daily =
-        onmousedown!(callback, Msg::ChangeGameMode(GameMode::DailyWord(today)));
-    let change_game_mode_quadruple =
-        onmousedown!(callback, Msg::ChangeGameMode(GameMode::Quadruple));
 
     let change_word_list_easy = onmousedown!(callback, Msg::ChangeWordList(WordList::Easy));
     let change_word_list_common = onmousedown!(callback, Msg::ChangeWordList(WordList::Common));
-    let change_word_list_full = onmousedown!(callback, Msg::ChangeWordList(WordList::Full));
-
-    let change_allow_profanities_yes = onmousedown!(callback, Msg::ChangeAllowProfanities(true));
-    let change_allow_profanities_no = onmousedown!(callback, Msg::ChangeAllowProfanities(false));
 
     let change_theme_dark = onmousedown!(callback, Msg::ChangeTheme(Theme::Dark));
     let change_theme_colorblind = onmousedown!(callback, Msg::ChangeTheme(Theme::Colorblind));
@@ -151,8 +137,12 @@ pub fn menu_modal(props: &MenuModalProps) -> Html {
                 html! {
                     <>
                         <div>
-                            <label class="label">{"Sanulien pituus:"}</label>
+                            <label class="label">{"Maiulien pituus:"}</label>
                             <div class="select-container">
+                                <button class={classes!("select", (props.word_length == 4).then(|| Some("select-active")))}
+                                    onmousedown={change_word_length_4}>
+                                    {"4 merkkiä"}
+                                </button>
                                 <button class={classes!("select", (props.word_length == 5).then(|| Some("select-active")))}
                                     onmousedown={change_word_length_5}>
                                     {"5 merkkiä"}
@@ -161,10 +151,14 @@ pub fn menu_modal(props: &MenuModalProps) -> Html {
                                     onmousedown={change_word_length_6}>
                                     {"6 merkkiä"}
                                 </button>
+                                <button class={classes!("select", (props.word_length == 7).then(|| Some("select-active")))}
+                                    onmousedown={change_word_length_7}>
+                                    {"7 merkkiä"}
+                                </button>
                             </div>
                         </div>
                         <div>
-                            <label class="label">{"Sanulista:"}</label>
+                            <label class="label">{"Maiulista:"}</label>
                             <div class="select-container">
                                 <button class={classes!("select", (props.current_word_list == WordList::Easy).then(|| Some("select-active")))}
                                     onmousedown={change_word_list_easy}>
@@ -173,23 +167,6 @@ pub fn menu_modal(props: &MenuModalProps) -> Html {
                                 <button class={classes!("select", (props.current_word_list == WordList::Common).then(|| Some("select-active")))}
                                     onmousedown={change_word_list_common}>
                                     {"Tavallinen"}
-                                </button>
-                                <button class={classes!("select", (props.current_word_list == WordList::Full).then(|| Some("select-active")))}
-                                    onmousedown={change_word_list_full}>
-                                    {"Vaikea"}
-                                </button>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="label">{"Rumat sanulit:"}</label>
-                            <div class="select-container">
-                                <button class={classes!("select", (!props.allow_profanities).then(|| Some("select-active")))}
-                                    onmousedown={change_allow_profanities_no}>
-                                    {"Ei"}
-                                </button>
-                                <button class={classes!("select", (props.allow_profanities).then(|| Some("select-active")))}
-                                    onmousedown={change_allow_profanities_yes}>
-                                    {"Kyllä"}
                                 </button>
                             </div>
                         </div>
@@ -207,15 +184,7 @@ pub fn menu_modal(props: &MenuModalProps) -> Html {
                     </button>
                     <button class={classes!("select", (props.game_mode == GameMode::Relay).then(|| Some("select-active")))}
                         onmousedown={change_game_mode_relay}>
-                        {"Sanuliketju"}
-                    </button>
-                    <button class={classes!("select", (props.game_mode == GameMode::Quadruple).then(|| Some("select-active")))}
-                        onmousedown={change_game_mode_quadruple}>
-                        {"Neluli"}
-                    </button>
-                    <button class={classes!("select", matches!(props.game_mode, GameMode::DailyWord(_)).then(|| Some("select-active")))}
-                        onclick={change_game_mode_daily}>
-                        {"Päivän sanuli"}
+                        {"Maiuliketju"}
                     </button>
                 </div>
             </div>
@@ -223,8 +192,8 @@ pub fn menu_modal(props: &MenuModalProps) -> Html {
                 <label class="label">{"Omat tilastosi:"}</label>
                 <ul>
                     <li class="statistics">{format!("Pisin putki: {}", props.max_streak)}</li>
-                    <li class="statistics">{format!("Pelatut sanulit: {}", props.total_played)}</li>
-                    <li class="statistics">{format!("Ratkaistut sanulit: {}", props.total_solved)}</li>
+                    <li class="statistics">{format!("Pelatut maiulit: {}", props.total_played)}</li>
+                    <li class="statistics">{format!("Ratkaistut maiulit: {}", props.total_solved)}</li>
                 </ul>
             </div>
             <div>

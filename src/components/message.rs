@@ -2,10 +2,7 @@ use yew::prelude::*;
 
 use crate::manager::GameMode;
 use crate::Msg as GameMsg;
-
-const FORMS_LINK_TEMPLATE_ADD: &str = "https://docs.google.com/forms/d/e/1FAIpQLSfH8gs4sq-Ynn8iGOvlc99J_zOG2rJEC4m8V0kCgF_en3RHFQ/viewform?usp=pp_url&entry.461337706=Lis%C3%A4yst%C3%A4&entry.560255602=";
-const FORMS_LINK_TEMPLATE_DEL: &str = "https://docs.google.com/forms/d/e/1FAIpQLSfH8gs4sq-Ynn8iGOvlc99J_zOG2rJEC4m8V0kCgF_en3RHFQ/viewform?usp=pp_url&entry.461337706=Poistoa&entry.560255602=";
-const DICTIONARY_LINK_TEMPLATE: &str = "https://www.kielitoimistonsanakirja.fi/#/";
+use crate::components::quotes::*;
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct MessageProps {
@@ -28,7 +25,9 @@ pub struct MessageProps {
 pub fn message(props: &MessageProps) -> Html {
     html! {
         <div class="message">
+            <div class="uppercase">
             { &props.message }
+            </div>
             <div class="message-small">{
                 if props.is_hidden {
                     let callback = props.callback.clone();
@@ -65,11 +64,8 @@ pub fn message(props: &MessageProps) -> Html {
                         />
                     }
                 } else if props.is_guessing && props.is_unknown {
-                    let last_guess = props.last_guess.to_lowercase();
                     html! {
-                        <a class="link" href={format!("{}{}", FORMS_LINK_TEMPLATE_ADD, last_guess)}
-                            target="_blank">{ "Ehdota lisäystä?" }
-                        </a>
+                        { "Kokeile jotain muuta!" }
                     }
                 } else {
                     html! {}
@@ -92,67 +88,14 @@ pub struct SubMessageProps {
 
 #[function_component(SubMessage)]
 fn sub_message(props: &SubMessageProps) -> Html {
-    let word = props.word.to_lowercase();
-
-    let callback = props.callback.clone();
-    let share_emojis = Callback::from(move |e: MouseEvent| {
-        e.prevent_default();
-        callback.emit(GameMsg::ShareEmojis);
-    });
-    let callback = props.callback.clone();
-    let share_link = Callback::from(move |e: MouseEvent| {
-        e.prevent_default();
-        callback.emit(GameMsg::ShareLink);
-    });
-
-    if props.game_mode == GameMode::Quadruple {
-        return html!{}   
-    }
-
     html! {
         <>
-            <a class="link" href={format!("{}{}?searchMode=all", DICTIONARY_LINK_TEMPLATE, word)}
-                target="_blank">{ "Sanakirja" }
+            <div class="padded">
+            {format!("{} - ", get_quote(&props.word.clone() as &str))}
+            <a class="link" href={format!("{}", get_url(&props.word.clone() as &str))}
+                            target="_blank">{ "Lue lisää!" }
             </a>
-            {" | "}
-            <a class="link" href={"javascript:void(0)"} onclick={share_link}>
-                {
-                    if !props.is_link_copied {
-                        {"Kopioi linkki"}
-                    } else {
-                        {"Kopioitu!"}
-                    }
-                }
-            </a>
-            {
-                if matches!(props.game_mode, GameMode::DailyWord(_)) {
-                    html! {
-                        <>
-                            {" | "}
-                            <a class="link" href={"javascript:void(0)"} onclick={share_emojis}>
-                                {
-                                    if !props.is_emojis_copied {
-                                        {"Kopioi tulos"}
-                                    } else {
-                                        {"Kopioitu!"}
-                                    }
-                                }
-                            </a>
-                        </>
-                    }
-                } else if !props.is_winner {
-                    html! {
-                        <>
-                            {" | "}
-                            <a class="link" href={format!("{}{}", FORMS_LINK_TEMPLATE_DEL, word)}
-                                target="_blank">{ "Ehdota poistoa?" }
-                            </a>
-                        </>
-                    }
-                } else {
-                    html! {}
-                }
-            }
+            </div>
         </>
     }
 }

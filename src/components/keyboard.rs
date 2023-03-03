@@ -188,22 +188,6 @@ pub fn keyboard_button(props: &KeyboardButtonProps) -> Html {
                     </button>
                 }
             }
-            KeyState::Quadruple(states) => {
-                let background = format!(
-                    "background: conic-gradient(var(--{top_right}) 0deg, var(--{top_right}) 90deg, var(--{bottom_right}) 90deg, var(--{bottom_right}) 180deg, var(--{bottom_left}) 180deg, var(--{bottom_left}) 270deg, var(--{top_left}) 270deg, var(--{top_left}) 360deg);",
-                    top_left=states[0],
-                    top_right=states[1],
-                    bottom_left=states[2],
-                    bottom_right=states[3],
-                );
-
-                html! {
-                    <button data-nosnippet="" class={"keyboard-button"} style={background.clone()}
-                        onmousedown={props.onkeypress.clone()}>
-                        { props.character }
-                    </button>
-                }
-            }
         }
     } else {
         html! {

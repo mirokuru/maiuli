@@ -20,8 +20,6 @@ use crate::manager::{
     CharacterCount, CharacterState, GameMode, KeyState, Theme, TileState, WordList, WordLists,
 };
 
-const DAILY_WORDS: &str = include_str!("../daily-words.txt");
-
 #[derive(Clone, PartialEq, Serialize, Deserialize)]
 pub struct Sanuli {
     game_mode: GameMode,
@@ -209,22 +207,14 @@ impl Sanuli {
         }
     }
 
-    pub fn set_word_lists(&mut self, word_lists: Rc<WordLists>) {
-        self.word_lists = word_lists;
-    }
-
     fn get_word(
-        game_mode: GameMode,
+        _game_mode: GameMode,
         word_list: WordList,
         word_length: usize,
         allow_profanities: bool,
         word_lists: &Rc<WordLists>,
     ) -> Vec<char> {
-        if let GameMode::DailyWord(date) = game_mode {
-            Self::get_daily_word(date)
-        } else {
-            Self::get_random_word(word_list, word_length, allow_profanities, word_lists)
-        }
+        Self::get_random_word(word_list, word_length, allow_profanities, word_lists)
     }
 
     fn get_random_word(
@@ -252,15 +242,6 @@ impl Sanuli {
     fn get_daily_word_index(date: NaiveDate) -> usize {
         let epoch = NaiveDate::from_ymd(2022, 1, 7); // Epoch of the daily word mode, index 0
         date.signed_duration_since(epoch).num_days() as usize
-    }
-
-    fn get_daily_word(date: NaiveDate) -> Vec<char> {
-        DAILY_WORDS
-            .lines()
-            .nth(Self::get_daily_word_index(date))
-            .unwrap()
-            .chars()
-            .collect()
     }
 
     pub fn is_guess_correct_length(&self) -> bool {
@@ -305,7 +286,7 @@ impl Sanuli {
         if self.is_winner {
             if let GameMode::DailyWord(_) = self.game_mode {
                 self.message = format!(
-                    "Löysit päivän sanulin! {}",
+                    "Löysit päivän maiulin! {}",
                     SUCCESS_EMOJIS.choose(&mut rand::thread_rng()).unwrap()
                 );
             } else {
@@ -407,13 +388,13 @@ impl Game for Sanuli {
 
     fn title(&self) -> String {
         if let GameMode::DailyWord(date) = self.game_mode {
-            format!("Päivän sanuli #{}", Self::get_daily_word_index(date) + 1)
+            format!("Päivän maiuli #{}", Self::get_daily_word_index(date) + 1)
         } else if self.game_mode == GameMode::Shared {
-            "Jaettu sanuli".to_owned()
+            "Jaettu maiuli".to_owned()
         } else if self.streak > 0 {
-            format!("Sanuli — Putki: {}", self.streak)
+            format!("Maiuli — Putki: {}", self.streak)
         } else {
-            "Sanuli".to_owned()
+            "Maiuli".to_owned()
         }
     }
 
@@ -511,7 +492,7 @@ impl Game for Sanuli {
         }
         if !self.is_guess_accepted_word() {
             self.is_unknown = true;
-            self.message = "Ei sanulistalla.".to_owned();
+            self.message = "Ei maiulistalla.".to_owned();
             return;
         }
 
@@ -530,7 +511,7 @@ impl Game for Sanuli {
         if self.is_game_ended() {
             self.is_guessing = false;
 
-            if matches!(self.game_mode, GameMode::DailyWord(_) | GameMode::Shared | GameMode::Quadruple) {
+            if matches!(self.game_mode, GameMode::DailyWord(_) | GameMode::Shared ) {
                 // Do nothing, don't update streaks
             } else if self.is_winner {
                 self.streak += 1;
@@ -584,7 +565,7 @@ impl Game for Sanuli {
                 "X".to_owned()
             };
 
-            message += &format!("Sanuli #{} {}/{}", index, guess_count, self.max_guesses);
+            message += &format!("Maiuli #{} {}/{}", index, guess_count, self.max_guesses);
             message += "\n\n";
 
             for guess in self.guesses.iter() {
@@ -655,7 +636,7 @@ impl Game for Sanuli {
         self.is_unknown = false;
         self.is_reset = false;
         self.is_hidden = false;
-        self.message = "Peli nollattu, arvaa sanuli!".to_owned();
+        self.message = "Peli nollattu, arvaa maiuli!".to_owned();
 
         self.known_states = std::iter::repeat(HashMap::new())
             .take(self.max_guesses)
@@ -703,9 +684,7 @@ impl Game for Sanuli {
     }
 
     fn persist(&self) -> Result<(), StorageError> {
-        if matches!(self.game_mode, GameMode::Shared | GameMode::Quadruple) {
-            // Never persist shared or subgames within quadruple mode
-            // The quadruple subgames should never call this persist anyways.
+        if matches!(self.game_mode, GameMode::Shared ) {
             return Ok(());
         }
 

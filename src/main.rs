@@ -6,7 +6,6 @@ use yew::prelude::*;
 mod components;
 mod game;
 mod manager;
-mod neluli;
 mod sanuli;
 
 use components::{
@@ -244,26 +243,6 @@ impl Component for App {
                                         max_guesses={game.max_guesses()}
                                         word_length={game.word_length()}
                                     />
-                                </div>
-                            },
-                            4 => html! {
-                                <div class="quadruple-container">
-                                    <div class="quadruple-grid">
-                                        {game.boards().iter().map(|board| {
-                                            html! {
-                                                <Board
-                                                    guesses={board.guesses.clone()}
-                                                    is_guessing={board.is_guessing}
-                                                    current_guess={board.current_guess}
-                                                    is_reset={game.is_reset()}
-                                                    is_hidden={game.is_hidden()}
-                                                    previous_guesses={game.previous_guesses().clone()}
-                                                    max_guesses={game.max_guesses()}
-                                                    word_length={game.word_length()}
-                                                />
-                                            }
-                                        }).collect::<Html>()}
-                                    </div>
                                 </div>
                             },
                             _ => html! {}

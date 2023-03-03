@@ -12,7 +12,6 @@ use wasm_bindgen::JsValue;
 use web_sys::{window, Window};
 
 use crate::game::Game;
-use crate::neluli::Neluli;
 use crate::sanuli::Sanuli;
 
 const EASY_WORDS: &str = include_str!("../easy-words.txt");
@@ -29,7 +28,6 @@ pub type WordLists = HashMap<(WordList, usize), HashSet<Vec<char>>>;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum KeyState {
-    Quadruple([TileState; 4]),
     Single(TileState),
 }
 
@@ -105,7 +103,6 @@ pub enum GameMode {
     Relay,
     DailyWord(NaiveDate),
     Shared,
-    Quadruple,
 }
 
 impl Default for GameMode {
@@ -248,14 +245,6 @@ impl Manager {
                 GameMode::Classic | GameMode::Relay | GameMode::DailyWord(_) => {
                     manager.game = Some(Box::new(Sanuli::new_or_rehydrate(
                         manager.current_game_mode,
-                        manager.current_word_list,
-                        manager.current_word_length,
-                        manager.allow_profanities,
-                        word_lists.clone(),
-                    )));
-                }
-                GameMode::Quadruple => {
-                    manager.game = Some(Box::new(Neluli::new_or_rehydrate(
                         manager.current_word_list,
                         manager.current_word_length,
                         manager.allow_profanities,
@@ -508,13 +497,7 @@ impl Manager {
                         self.allow_profanities,
                         self.word_lists.clone(),
                     ))
-                }
-                GameMode::Quadruple => Box::new(Neluli::new_or_rehydrate(
-                    next_game.1,
-                    next_game.2,
-                    self.allow_profanities,
-                    self.word_lists.clone(),
-                )),
+                },
             });
 
         self.game = Some(game);

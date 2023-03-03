@@ -16,7 +16,7 @@ fn parse_word_list(data: String) -> Vec<String> {
 
         let count = word.chars().count();
 
-        if (count == 6 || count == 5)
+        if (count == 7 || count == 6 || count == 5 || count == 4)
             && word
                 .to_uppercase()
                 .chars()

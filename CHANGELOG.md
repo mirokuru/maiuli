@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Maiuli v1.0 - 2023-03-03
+
+### Changed
+- Maiuli was forked from Sanuli
+- Added support for 4 and 7 character words
+- Dropped some game modes
+- Re-themed the UI
+- Added support for quotes and links which are displayed at the end of a game
+
 ## v1.14 - 2022-02-19
 
 ### Changed
